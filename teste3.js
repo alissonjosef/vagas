@@ -1,15 +1,24 @@
-var data =  require("./fakeData");
+const data = require("./fakeData");
+const validatePermissions = require("./middleware");
 
-module.exports = function(req, res) {
-  
-    var name =  req.query.name;
+module.exports = function (req, res) {
+  validatePermissions(req, res, () => {
+    const { name } = req.query;
 
-    for(let i = 0; i < data.length;  i++) {
-        if(i.name == name) {
-            data[i] = null;
-        }
+    let deleted = false;
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i] && data[i].name === name) {
+        data[i] = null;
+        deleted = true;
+        break;
+      }
     }
 
-    res.send("success");
-
+    if (deleted) {
+      res.send("success");
+    } else {
+      res.status(404).send("User not found");
+    }
+  });
 };

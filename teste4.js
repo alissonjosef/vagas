@@ -1,13 +1,19 @@
-var data =  require("./fakeData");
+const data = require("./fakeData");
+const validatePermissions = require("./middleware");
 
-module.exports =  function(req, res) {
-  
-    var id =  req.query.id;
+module.exports = function(req, res) {
 
-    const reg = data.find(d => id == id);
-    reg.name = req.body.name;
-    reg.job = req.body.job;
+  validatePermissions(req, res, () => {
+    const { id } = req.query;
 
-    res.send(reg);
+    const user = data.find((item) => item.id == id);
 
+    if (user) {
+      user.name = req.body.name;
+      user.job = req.body.job;
+      res.send(user);
+    } else {
+      res.status(404).send("User not found");
+    }
+  });
 };
