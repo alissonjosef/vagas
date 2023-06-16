@@ -1,6 +1,6 @@
-const permissions = {
+const permissions =  {
     canDeleteUser: true,
-    canUpdateUser: false,
+    canUpdateUser: true,
   };
   
   module.exports = permissions;
